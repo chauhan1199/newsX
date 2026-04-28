@@ -1,0 +1,4 @@
+node_modules/
+.env
+news-app/node_modules/
+news-app/.env

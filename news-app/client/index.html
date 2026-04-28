@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Flash News</title>
+  <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+  <style>
+    body { font-family: Arial; }
+    .ticker { background: black; color: white; padding: 10px; }
+    .news { margin: 10px 0; }
+  </style>
+</head>
+<body>
+
+<h2>🔥 Flash News</h2>
+
+<div class="ticker">
+  <marquee id="ticker"></marquee>
+</div>
+
+<h3>Latest News</h3>
+<div id="list"></div>
+
+<script>
+const socket = io("http://localhost:8080");
+
+socket.on("flash-news", (data) => {
+  // Ticker
+  document.getElementById("ticker").innerText =
+    data.map(n => n.title).join(" 🔥 ");
+
+  // List
+  const list = document.getElementById("list");
+
+  list.innerHTML = data.map(n => {
+    // We now have intelligent AI-generated opinions sent over the socket!
+    const tweetText = encodeURIComponent(`${n.aiComment} \n\n${n.title}\n\nRead more here:`);
+    
+    return `
+    <div class="news">
+      <a href="${n.link}" target="_blank" style="font-weight: bold; font-size: 18px; color: #1a0dab; text-decoration: none;">${n.title}</a>
+      <a href="https://twitter.com/intent/tweet?text=${tweetText}&url=${encodeURIComponent(n.link)}" target="_blank" onclick="this.closest('.news').remove();" style="text-decoration: none; font-size: 12px; background: #000; color: white; padding: 4px 8px; border-radius: 12px; margin-left: 10px; font-weight: bold;">𝕏 Post</a>
+      <p style="color: #555; font-size: 14px;">${n.source} • ${new Date(n.pubDate).toLocaleString()}</p>
+    </div>
+  `}).join("");
+});
+</script>
+
+</body>
+</html>

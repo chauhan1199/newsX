@@ -21,7 +21,7 @@
 <div id="list"></div>
 
 <script>
-const socket = io("http://localhost:8080");
+const socket = io();
 
 socket.on("flash-news", (data) => {
   // Ticker
